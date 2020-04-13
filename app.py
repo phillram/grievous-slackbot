@@ -25,9 +25,9 @@ slack_web_client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
 # Initialize the words that Greivous bot will listen for
 word_list = defaultdict(list)
 
-print('>>> SLACK_BOT_TOKEN: ' + os.environ['SLACK_BOT_TOKEN'])
-print('>>> SLACK_SIGNING_SECRET:' + os.environ['SLACK_SIGNING_SECRET'])
-print('>>> slack_web_client:' + str(slack_web_client))
+# print('>>> SLACK_BOT_TOKEN: ' + os.environ['SLACK_BOT_TOKEN'])
+# print('>>> SLACK_SIGNING_SECRET:' + os.environ['SLACK_SIGNING_SECRET'])
+# print('>>> slack_web_client:' + str(slack_web_client))
 
 
 # _______________________________________________________________
@@ -50,7 +50,7 @@ def hello_there():
 def add_to_watchlist():
     phrase = request.form['text']
     user_id = request.form['user_id']
-    print('>>> The user is: ' + user_id + '. The phrase is ' + phrase)
+    # print('>>> The user is: ' + user_id + '. The phrase is ' + phrase)
 
     # Adds the word to the requesters list
     word_list[user_id].append(phrase.lower())
@@ -63,7 +63,7 @@ def add_to_watchlist():
 def remove_from_watchlist():
     phrase = request.form['text']
     user_id = request.form['user_id']
-    print('>>> The user is: ' + user_id + '. The phrase is ' + phrase)
+    # print('>>> The user is: ' + user_id + '. The phrase is ' + phrase)
 
     # Tries to remove the phrase they said. Will return an error
     # message if unable to do so
@@ -112,18 +112,18 @@ def message(payload):
     text = event.get('text')
     timestamp = event.get('ts')
     
-    print('>>> A message has been detected')
-    print('>>> channel_id is: ' + channel_id)
-    print('>>> user_id is: ' + user_id)
-    print('>>> text is: ' + text)
-    print('>>> timestamp is: ' + str(timestamp))
+    # print('>>> A message has been detected')
+    # print('>>> channel_id is: ' + channel_id)
+    # print('>>> user_id is: ' + user_id)
+    # print('>>> text is: ' + text)
+    # print('>>> timestamp is: ' + str(timestamp))
 
     # This looks through all the values in word_list in order to match
     # against the word_list values
     # It then finds the user who added the word, and messages them
     for key, value in word_list.items():
-        print('>>> key is: ' + str(key) + ' And value is: ' + str(value))
-        print('>>> text is: ' + text)
+        # print('>>> key is: ' + str(key) + ' And value is: ' + str(value))
+        # print('>>> text is: ' + text)
         
         # Checking if the word exists in the word_list
         if any(word in text.lower() for word in value):
@@ -131,7 +131,7 @@ def message(payload):
             # Opens a DM with to the requesting user and saves the channel ID
             response = slack_web_client.im_open( user = key)
             dm_channel = response['channel']['id']
-            print('>>> dm_channel is: ' + str(dm_channel))
+            # print('>>> dm_channel is: ' + str(dm_channel))
             
             # Uses the user ID to pull the display name
             # of the user that triggered the bot
@@ -141,7 +141,7 @@ def message(payload):
             # Uses the timestamp to generate a link to the message
             response = slack_web_client.chat_getPermalink(channel = channel_id, message_ts = timestamp)
             message_link = response['permalink']
-            print('>>> message_link is: ' + str(message_link))
+            # print('>>> message_link is: ' + str(message_link))
 
             # Sends the message to the IM channel above
             slack_web_client.chat_postMessage(

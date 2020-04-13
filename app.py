@@ -159,17 +159,26 @@ if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
     ssl_context = ssl_lib.create_default_context(cafile=certifi.where())
-    # app.run(port=os.environ['PORT']) # Used on Heroku
+
+    # This section is for using the script on Heroku
+    # Only if the SLACK_BOT_HEROKU environment variable is set to 1
+    #________________________________________________________________
+    if os.environ['SLACK_BOT_HEROKU'] == 'True':
+        print('running heroku')
+        app.run(port=os.environ['PORT'])
 
     # This section is for using the script on your local machine
-    #________________________________________________________________
-    # Open an ngrok instance on the same port as Flask
+    # If the SLACK_BOT_HEROKU environment variable is not set
+    # It will open an ngrok instance on the same port as Flask
     # This will allow public (Slack) traffic be able to access
     # your localhost Flask instance
-    public_url = ngrok.connect(port=os.environ['FLASK_PORT'])
-    tunnels = ngrok.get_tunnels()
-    print(str(tunnels))
+    #________________________________________________________________
+    else:
+        print('not heroku')
+        public_url = ngrok.connect(port=os.environ['FLASK_PORT'])
+        tunnels = ngrok.get_tunnels()
+        print(str(tunnels))
 
-    # Using the port specificed to match Ngrok
-    # and to start Flask
-    app.run(port=os.environ['FLASK_PORT'])
+        # Using the port specificed to match Ngrok
+        # and to start Flask
+        app.run(port=os.environ['FLASK_PORT'])

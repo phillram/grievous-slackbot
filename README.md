@@ -135,5 +135,6 @@ Now feel free to try it out as much as you'd like!
 ### To be added
 - Implement OAuth so that users won't have to manually make the bot everytime. Currently, it's quite a bit of hassle and that's just a bit much.
 - Make it more docker-compose friendly.
+- Add testing assertations. 
 - Don't allow users to add blank words.
 - Don't allow users to add the same word multiple times.

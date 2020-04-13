@@ -103,10 +103,10 @@ def message(payload):
     user_id = event.get('user')
     text = event.get('text')
     timestamp = event.get('ts')
-    # print('>>> channel_id is: ' + channel_id)
-    # print('>>> user_id is: ' + user_id)
-    # print('>>> text is: ' + text)
-    # print('>>> timestamp is: ' + str(timestamp))
+    print('>>> channel_id is: ' + channel_id)
+    print('>>> user_id is: ' + user_id)
+    print('>>> text is: ' + text)
+    print('>>> timestamp is: ' + str(timestamp))
 
     # This looks through all the values in word_list in order to match
     # against the word_list values

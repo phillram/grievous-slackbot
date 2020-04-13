@@ -25,7 +25,7 @@ slack_web_client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
 # Initialize the words that Greivous bot will listen for
 word_list = defaultdict(list)
 
-
+print('Startup good hopefully')
 
 # _______________________________________________________________
 # These allow Flask to listen whenver a user does a slash 

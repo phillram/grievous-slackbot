@@ -7,6 +7,7 @@ from slackeventsapi import SlackEventAdapter
 from flask import Flask, request
 import ssl as ssl_lib
 from collections import defaultdict 
+from pyngrok import ngrok
 
 
 # _______________________________________________________________
@@ -28,42 +29,6 @@ word_list = defaultdict(list)
 # print('>>> SLACK_BOT_TOKEN: ' + os.environ['SLACK_BOT_TOKEN'])
 # print('>>> SLACK_SIGNING_SECRET:' + os.environ['SLACK_SIGNING_SECRET'])
 # print('>>> slack_web_client:' + str(slack_web_client))
-
-client_id = os.environ["SLACK_CLIENT_ID"]
-client_secret = os.environ["SLACK_CLIENT_SECRET"]
-oauth_scope = os.environ["SLACK_BOT_SCOPE"]
-
-@app.route("/authorize", methods=["GET"])
-def pre_install():
-    # return f'<a href="https://slack.com/oauth/v2/authorize?client_id=1065699221921.1057106576981&scope=
-    # app_mentions:read,calls:write,channels:history,channels:read,chat:write,commands,im:history,im:read,im:write,incoming-webhook,users:read">Add to Slack</a>'
-    return f'<a href="https://slack.com/oauth/v2/authorize?scope={ oauth_scope }&client_id={ client_id }">Add to Slack</a>'
-
-
-@app.route("/authorized", methods=["GET", "POST"])
-def post_install():
-    # Retrieve the auth code from the request params
-    print(str(request.args))
-    auth_code = request.args['code']
-
-    # An empty string is a valid token for this request
-    client = slack.WebClient(token="")
-
-    # Request the auth tokens from Slack
-    response = client.oauth_v2_access(
-        client_id=client_id,
-        client_secret=client_secret,
-        code=auth_code
-    )
-
-    # Save the bot token to an environmental variable or to your data store
-    # for later use
-    os.environ["SLACK_BOT_TOKEN"] = response['access_token']
-
-    # Don't forget to let the user know that auth has succeeded!
-    return "Auth complete!"
-
-
 
 
 # _______________________________________________________________
@@ -194,5 +159,17 @@ if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
     ssl_context = ssl_lib.create_default_context(cafile=certifi.where())
-    app.run(port=os.environ['PORT']) # Used on Heroku
-    # app.run(port='5066') # Hardcoded port for local testing
+    # app.run(port=os.environ['PORT']) # Used on Heroku
+
+    # This section is for using the script on your local machine
+    #________________________________________________________________
+    # Open an ngrok instance on the same port as Flask
+    # This will allow public (Slack) traffic be able to access
+    # your localhost Flask instance
+    public_url = ngrok.connect(port=os.environ['FLASK_PORT'])
+    tunnels = ngrok.get_tunnels()
+    print(str(tunnels))
+
+    # Using the port specificed to match Ngrok
+    # and to start Flask
+    app.run(port=os.environ['FLASK_PORT'])

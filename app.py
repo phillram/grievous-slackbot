@@ -25,15 +25,18 @@ slack_web_client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
 # Initialize the words that Greivous bot will listen for
 word_list = defaultdict(list)
 
-print('Startup good hopefully')
+print('>>> SLACK_BOT_TOKEN: ' + os.environ['SLACK_BOT_TOKEN'])
+print('>>> SLACK_SIGNING_SECRET:' + os.environ['SLACK_SIGNING_SECRET'])
+print('>>> slack_web_client:' + str(slack_web_client))
+
 
 # _______________________________________________________________
 # These allow Flask to listen whenver a user does a slash 
 # command.
 # _______________________________________________________________
 
-# For '/hellothere' command. Shows the user the proper
-#  answer whenever you're greeted.
+# For '/hellothere' command. Shows the user the proper answer 
+# whenever you're greeted.
 # Slack should automatically enlarge the gif
 @app.route('/slack/hellothere', methods=['POST'])
 def hello_there():
@@ -47,7 +50,7 @@ def hello_there():
 def add_to_watchlist():
     phrase = request.form['text']
     user_id = request.form['user_id']
-    # print('The user is: >' + user_id + '< The phrase is >' + phrase + '<')
+    print('>>> The user is: ' + user_id + '. The phrase is ' + phrase)
 
     # Adds the word to the requesters list
     word_list[user_id].append(phrase.lower())
@@ -60,7 +63,7 @@ def add_to_watchlist():
 def remove_from_watchlist():
     phrase = request.form['text']
     user_id = request.form['user_id']
-    # print('The user is: >' + user_id + '< The phrase is >' + phrase + '<')
+    print('>>> The user is: ' + user_id + '. The phrase is ' + phrase)
 
     # Tries to remove the phrase they said. Will return an error
     # message if unable to do so
@@ -88,6 +91,12 @@ def show_watchlist():
     else:
         return('Your current watchlist is: ' + str(word_list[user_id])[1:-1])
 
+# When people navigate to the main page in their browser
+# It shows a link to the Github repository.
+# Can be cuter and more stylized later
+@app.route('/')
+def point_to_github():
+    return 'Please check out: https://github.com/phillram/grievous-slackbot'
 
 # _______________________________________________________________
 # Message events in Slack will trigger this section
@@ -95,7 +104,6 @@ def show_watchlist():
 # _______________________________________________________________
 @slack_events_adapter.on('message')
 def message(payload):
-    
     # Stores information about the message
     event = payload.get('event', {})
 
@@ -103,6 +111,8 @@ def message(payload):
     user_id = event.get('user')
     text = event.get('text')
     timestamp = event.get('ts')
+    
+    print('>>> A message has been detected')
     print('>>> channel_id is: ' + channel_id)
     print('>>> user_id is: ' + user_id)
     print('>>> text is: ' + text)
@@ -112,9 +122,8 @@ def message(payload):
     # against the word_list values
     # It then finds the user who added the word, and messages them
     for key, value in word_list.items():
-        # print('\n\n\n\nyou are in the loop')
-        # print('key is: ' + str(key) + ' And value is: ' + str(value))
-        # print('>>> text is: ' + text)
+        print('>>> key is: ' + str(key) + ' And value is: ' + str(value))
+        print('>>> text is: ' + text)
         
         # Checking if the word exists in the word_list
         if any(word in text.lower() for word in value):
@@ -122,7 +131,7 @@ def message(payload):
             # Opens a DM with to the requesting user and saves the channel ID
             response = slack_web_client.im_open( user = key)
             dm_channel = response['channel']['id']
-            # print('>>> im_channel is: ' + str(im_channel))
+            print('>>> dm_channel is: ' + str(dm_channel))
             
             # Uses the user ID to pull the display name
             # of the user that triggered the bot
@@ -132,14 +141,13 @@ def message(payload):
             # Uses the timestamp to generate a link to the message
             response = slack_web_client.chat_getPermalink(channel = channel_id, message_ts = timestamp)
             message_link = response['permalink']
-            # print('>>> message_link is: ' + str(message_link))
+            print('>>> message_link is: ' + str(message_link))
 
             # Sends the message to the IM channel above
             slack_web_client.chat_postMessage(
                 channel = dm_channel,
                 text = triggering_users_name + ' mentioned your keyword! \n' + message_link
             )
-
 
 
 # _______________________________________________________________
@@ -150,4 +158,5 @@ if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
     ssl_context = ssl_lib.create_default_context(cafile=certifi.where())
-    app.run(port=os.environ['PORT'])
+    # app.run(port=os.environ['PORT']) # Used on Heroku
+    app.run(port='5066') # Hardcoded port for local testing

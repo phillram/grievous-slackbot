@@ -1,7 +1,7 @@
 # _______________________________________________________________
 # Importing requirements 
 # _______________________________________________________________
-import os, logging, certifi
+import os, logging, certifi, slack
 from slack import WebClient
 from slackeventsapi import SlackEventAdapter
 from flask import Flask, request
@@ -28,6 +28,42 @@ word_list = defaultdict(list)
 # print('>>> SLACK_BOT_TOKEN: ' + os.environ['SLACK_BOT_TOKEN'])
 # print('>>> SLACK_SIGNING_SECRET:' + os.environ['SLACK_SIGNING_SECRET'])
 # print('>>> slack_web_client:' + str(slack_web_client))
+
+client_id = os.environ["SLACK_CLIENT_ID"]
+client_secret = os.environ["SLACK_CLIENT_SECRET"]
+oauth_scope = os.environ["SLACK_BOT_SCOPE"]
+
+@app.route("/authorize", methods=["GET"])
+def pre_install():
+    # return f'<a href="https://slack.com/oauth/v2/authorize?client_id=1065699221921.1057106576981&scope=
+    # app_mentions:read,calls:write,channels:history,channels:read,chat:write,commands,im:history,im:read,im:write,incoming-webhook,users:read">Add to Slack</a>'
+    return f'<a href="https://slack.com/oauth/v2/authorize?scope={ oauth_scope }&client_id={ client_id }">Add to Slack</a>'
+
+
+@app.route("/authorized", methods=["GET", "POST"])
+def post_install():
+    # Retrieve the auth code from the request params
+    print(str(request.args))
+    auth_code = request.args['code']
+
+    # An empty string is a valid token for this request
+    client = slack.WebClient(token="")
+
+    # Request the auth tokens from Slack
+    response = client.oauth_v2_access(
+        client_id=client_id,
+        client_secret=client_secret,
+        code=auth_code
+    )
+
+    # Save the bot token to an environmental variable or to your data store
+    # for later use
+    os.environ["SLACK_BOT_TOKEN"] = response['access_token']
+
+    # Don't forget to let the user know that auth has succeeded!
+    return "Auth complete!"
+
+
 
 
 # _______________________________________________________________

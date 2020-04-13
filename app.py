@@ -158,5 +158,5 @@ if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
     ssl_context = ssl_lib.create_default_context(cafile=certifi.where())
-    # app.run(port=os.environ['PORT']) # Used on Heroku
-    app.run(port='5066') # Hardcoded port for local testing
+    app.run(port=os.environ['PORT']) # Used on Heroku
+    # app.run(port='5066') # Hardcoded port for local testing

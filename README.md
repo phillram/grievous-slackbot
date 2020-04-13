@@ -27,7 +27,7 @@ We will first need to create the but on Slack's website in order for you to gene
 ![Image description](link-to-image)
  - Scroll down the page and you'll see the *App Credentials* section.
  - Save the the `Signing Secret`. We weill be using this shortly.
- - Now, on the left side click the option for `OAuth & Permissions`. Scroll down to the `Scopes` section. Add the `im:write` and `chat:write` permissions.
+ - Now, on the left side click the option for `OAuth & Permissions`. Scroll down to the `Scopes` section. Add the `channels:history`, `chat:write`, `commands`,  `im:write`, `users:read` permissions.
  ![Image description](link-to-image)
  
  - Now, on the left side click the option for `Install App`
@@ -119,3 +119,21 @@ Perfect! Now that our service is set up, let's point the Slack bot to our Ngrok 
 - Click the dropdown option for `Subscribe to bot events`, click `Add Bot User Event`, and then add `message.channels`. Click Save in the bottom right.
 ![Image description](link-to-image)
 - Congrats! The bot should now be active and respond to the slash commands you've set up!
+
+
+
+### Recieving DMs
+Slack only authorizes bots to read channels that they are currently members of. So we'll just have to invite the bot using the normal `/invite` command.
+
+- Go to your Slack workspace and navigate to the channel you wish to listen to
+- Type `/invite grievous` (or whatever you've named the bot), then press enter.
+
+Now feel free to try it out as much as you'd like!
+
+
+
+### To be added
+- Implement OAuth so that users won't have to manually make the bot everytime. Currently, it's quite a bit of hassle and that's just a bit much.
+- Make it more docker-compose friendly.
+- Don't allow users to add blank words.
+- Don't allow users to add the same word multiple times.

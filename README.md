@@ -24,18 +24,18 @@ We will first need to create the but on Slack's website in order for you to gene
  - Ensure you're logged into a Slack workspace
  - Navigate to [Slack's bot creation](https://api.slack.com/apps?new_app=1)
  - Type in an App Name and select your development workspace
-![Adding bot to Workspace](link-to-image)
+![Adding bot to Workspace](https://raw.githubusercontent.com/phillram/grievous-slackbot/master/pictures/create_slackbot_1.PNG)
  - Scroll down the page and you'll see the *App Credentials* section.
- ![App Credentials](link-to-image)
+ ![App Credentials](https://raw.githubusercontent.com/phillram/grievous-slackbot/master/pictures/create_slackbot_2.PNG)
  - Save the the `Signing Secret`. We weill be using this shortly.
  - Now, on the left side click the option for `OAuth & Permissions`. Scroll down to the `Scopes` section. Add the `channels:history`, `chat:write`, `commands`,  `im:write`, `users:read` permissions.
- ![Scopes used](link-to-image)
+ ![Scopes used](https://raw.githubusercontent.com/phillram/grievous-slackbot/master/pictures/create_slackbot_3.PNG)
  
  - Now, on the left side click the option for `Install App`
  - Here you'll see a button to `Install App to Workspace`. Click on it and you'll the bot will request permissions to be installed. 
-![Installing to workspace](link-to-image)
+![Installing to workspace](https://raw.githubusercontent.com/phillram/grievous-slackbot/master/pictures/create_slackbot_4.PNG)
 - Accept the permissions and you'll be given an OAuth token. Save this as we will use this in the next section.
-![OAuth Token](link-to-image)
+![OAuth Token](https://raw.githubusercontent.com/phillram/grievous-slackbot/master/pictures/create_slackbot_5.PNG)
 - Now that we have those keys. Let's start our server!
 
 
@@ -103,7 +103,7 @@ Perfect! Now that our service is set up, let's point the Slack bot to our Ngrok 
  - Navigate to [your Slack Apps](https://api.slack.com/apps), and then select the app you just made.
  - Click on the `Slash Commands` menu on the left side to start adding commands.
  - Click `Create New Command` 
-![Creating a new slash command](link-to-image)
+![Creating a new slash command](https://raw.githubusercontent.com/phillram/grievous-slackbot/master/pictures/slash_commands_1.PNG)
 
 - In this menu we will add our command, the URL, and descriptions for each of the four commands. Be sure to save at the bottom right.
 - I will use my Ngrok service from above (`https://991aed92.ngrok.io`) for this example. *Please be sure to replace it with your own*.
@@ -115,14 +115,14 @@ Perfect! Now that our service is set up, let's point the Slack bot to our Ngrok 
 | /watchlist | https://991aed92.ngrok.io/slack/watchlist | Displays what words you're watching | What am I looking for? |
 | /hellothere | https://991aed92.ngrok.io/slack/hellothere | A greeting from Grievous |  |
 
-![Completed watch command](link-to-image)
+![Completed watch command](https://raw.githubusercontent.com/phillram/grievous-slackbot/master/pictures/slash_commands_2.PNG)
 
 
 - For the final piece, we want to make sure that the bot can read the chat messages. It would then message you when the words you set up are found.
 - Click on `Event Subsciptions` on the menu. Toggle the option to `On`.
 - Add the request URL. This would be the same as your Ngrok above but with `/slack/events` as a suffix.
 - Click the dropdown option for `Subscribe to bot events`, click `Add Bot User Event`, and then add `message.channels`. Click Save in the bottom right.
-![Adding Events](link-to-image)
+![Adding Events](https://raw.githubusercontent.com/phillram/grievous-slackbot/master/pictures/slash_commands_3.PNG)
 - Congrats! The bot should now be active and respond to the slash commands you've set up!
 
 

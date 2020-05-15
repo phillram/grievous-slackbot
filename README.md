@@ -60,7 +60,8 @@ cd ~/folder/grievous-slackbot
 ```
 
 - Now we can start up the service the bot will listen to. In your terminal we can use the dockerfile to set our options and start up the service. You'll need to use input your Slack bot keys from the prerequisites above.
-- The docker options:
+
+The docker options:
 | Option | Value to Input |
 | ------ | ------ |
 | signing_secret | SLACK_SIGNING_SECRET from above |

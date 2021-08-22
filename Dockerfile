@@ -1,5 +1,5 @@
 
-FROM python:3
+FROM python:3.10.0b3
 
 COPY requirements.txt /tmp
 WORKDIR /tmp

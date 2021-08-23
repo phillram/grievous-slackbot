@@ -9,6 +9,7 @@ import ssl as ssl_lib
 from collections import defaultdict 
 from pyngrok import ngrok
 
+
 # _______________________________________________________________
 # Initializing everything
 # _______________________________________________________________
@@ -97,6 +98,7 @@ def show_watchlist():
 @app.route('/')
 def point_to_github():
     return 'Please check out: https://github.com/phillram/grievous-slackbot'
+
 
 # _______________________________________________________________
 # Message events in Slack will trigger this section
